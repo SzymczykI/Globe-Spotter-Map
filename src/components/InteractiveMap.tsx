@@ -4,8 +4,7 @@ import DeckOverlay from "./DeckOverlay";
 import { IconLayer, TextLayer } from "@deck.gl/layers";
 import { fetchData } from "../utils/dataFetcher";
 import pin from "../assets/pin.png";
-import { HoverInfo, MapComponentProps, Response } from "../interfaces";
-import Tooltip from "./Tooltip";
+import { MapComponentProps, Response } from "../interfaces";
 
 const InteractiveMap = ({ setModal }: MapComponentProps) => {
   const token = process.env.REACT_APP_MAPBOX_ACCESS_TOKEN;
@@ -16,24 +15,12 @@ const InteractiveMap = ({ setModal }: MapComponentProps) => {
     zoom: 1.5,
   });
   const [countriesData, setCountriesData] = useState<Response[]>([]);
-  const [hoverInfo, setHoverInfo] = useState<HoverInfo | null>(null);
 
   useEffect(() => {
     fetchData()
       .then((res) => setCountriesData(res))
       .catch((err) => console.log(err));
   }, []);
-
-  const hoverHandler = ({ object, x, y }: any) => {
-    if (object) {
-      setHoverInfo({
-        name: object.name.common,
-        latlng: [x, y],
-      });
-    } else {
-      setHoverInfo(null);
-    }
-  };
 
   const clickHandler = ({ object }: any) => {
     setModal(() => ({
@@ -61,7 +48,6 @@ const InteractiveMap = ({ setModal }: MapComponentProps) => {
       anchorY: 128,
     }),
     sizeMinPixels: 20,
-    onHover: hoverHandler,
     onClick: clickHandler,
   });
 
@@ -76,7 +62,7 @@ const InteractiveMap = ({ setModal }: MapComponentProps) => {
     getColor: [78, 84, 82],
     getSize: 10,
     getAlignmentBaseline: "center",
-    characterSet: 'auto'
+    characterSet: "auto",
   });
 
   return (
@@ -89,14 +75,20 @@ const InteractiveMap = ({ setModal }: MapComponentProps) => {
       renderWorldCopies={false}
     >
       <NavigationControl />
-      <DeckOverlay layers={[countriesLayer, capitalsLayer]} />
-      {hoverInfo && (
-        <Tooltip
-          x={hoverInfo.latlng[0]}
-          y={hoverInfo.latlng[1]}
-          name={hoverInfo.name}
-        />
-      )}
+      <DeckOverlay
+        layers={[countriesLayer, capitalsLayer]}
+        getTooltip={({ object }) =>
+          object && {
+            html: `<h2>${object.name.common}</h2>`,
+            style: {
+              backgroundColor: "rgba(252, 250, 250,.8)",
+              fontSize: "1rem",
+              color: "black",
+              borderRadius: "10px",
+            },
+          }
+        }
+      />
     </Map>
   );
 };

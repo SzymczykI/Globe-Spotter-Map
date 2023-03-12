@@ -64,11 +64,6 @@ export interface Name {
   };
 }
 
-export interface HoverInfo {
-  name: string;
-  latlng: number[];
-}
-
 export interface TooltipComponentProps {
   x: number;
   y: number;
