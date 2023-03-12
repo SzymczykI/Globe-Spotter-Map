@@ -1,20 +1,23 @@
 import { useEffect, useState } from "react";
 import Map, { NavigationControl } from "react-map-gl";
 import DeckOverlay from "./DeckOverlay";
-import { fetchData } from "../helpers/dataFetcher";
+import { fetchData } from "../utils/dataFetcher";
 import { IconLayer, TextLayer } from "@deck.gl/layers";
 import pin from "../assets/pin.png";
+import { HoverInfo, Response } from "../interfaces";
+import Tooltip from "./Tooltip";
 
 const InteractiveMap = () => {
   const token = process.env.REACT_APP_MAPBOX_ACCESS_TOKEN;
 
   const [mapViewState, setMapViewState] = useState({
-    longitude: 0,
+    longitude: 50,
     latitude: 0,
-    zoom: 2,
+    zoom: 1.5,
   });
 
-  const [countriesData, setCountriesData] = useState([]);
+  const [countriesData, setCountriesData] = useState<Response[]>([]);
+  const [hoverInfo, setHoverInfo] = useState<HoverInfo | null>(null);
 
   useEffect(() => {
     fetchData()
@@ -22,16 +25,33 @@ const InteractiveMap = () => {
       .catch((err) => console.log(err));
   }, []);
 
+  const hoverHandler = ({object, x, y}:any) => {
+    if (object) {
+      setHoverInfo({
+        name: object.name.common,
+        latlng: [x, y],
+      });
+    } else {
+      setHoverInfo(null);
+    }
+  };
+
+  console.log(hoverInfo);
+
   const countriesLayer = new IconLayer({
     id: "countries",
+    pickable: true,
     data: countriesData,
     getPosition: (d: { latlng: number[] }) => [d.latlng[1], d.latlng[0]],
+    getSize: () => 8,
     getIcon: () => ({
       url: pin,
       width: 128,
       height: 128,
+      anchorY: 128,
     }),
     sizeMinPixels: 20,
+    onHover: hoverHandler,
   });
 
   const capitalsLayer = new TextLayer({
@@ -44,7 +64,7 @@ const InteractiveMap = () => {
     getText: (d: { capital: string[] }) => (d.capital ? d.capital[0] : ""),
     getColor: [78, 84, 82],
     getSize: 10,
-    getAlignmentBaseline: "center"
+    getAlignmentBaseline: "center",
   });
 
   return (
@@ -54,11 +74,17 @@ const InteractiveMap = () => {
       {...mapViewState}
       onMove={(next) => setMapViewState(next.viewState)}
       style={{ width: "100vw", height: "100vh" }}
-      cursor="auto"
       renderWorldCopies={false}
     >
       <NavigationControl />
-      <DeckOverlay layers={[countriesLayer, capitalsLayer]} />
+      <DeckOverlay layers={[capitalsLayer, countriesLayer]} />
+      {hoverInfo && (
+        <Tooltip
+          x={hoverInfo.latlng[0]}
+          y={hoverInfo.latlng[1]}
+          name={hoverInfo.name}
+        />
+      )}
     </Map>
   );
 };
