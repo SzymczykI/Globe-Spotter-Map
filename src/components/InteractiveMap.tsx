@@ -1,5 +1,7 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import Map, { NavigationControl } from "react-map-gl";
+import DeckOverlay from "./DeckOverlay";
+import { fetchData } from "../helpers/dataFetcher";
 
 const InteractiveMap = () => {
   const token = process.env.REACT_APP_MAPBOX_ACCESS_TOKEN;
@@ -9,6 +11,14 @@ const InteractiveMap = () => {
     latitude: 0,
     zoom: 2,
   });
+
+  const [countriesData, setCountriesData] = useState([]);
+
+  useEffect(() => {
+    fetchData()
+      .then((res) => setCountriesData(res))
+      .catch((err) => console.log(err));
+  }, []);
 
   return (
     <Map
@@ -21,6 +31,7 @@ const InteractiveMap = () => {
       renderWorldCopies={false}
     >
       <NavigationControl />
+      <DeckOverlay />
     </Map>
   );
 };
