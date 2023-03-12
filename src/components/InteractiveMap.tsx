@@ -10,8 +10,8 @@ const InteractiveMap = ({ setModal }: MapComponentProps) => {
   const token = process.env.REACT_APP_MAPBOX_ACCESS_TOKEN;
 
   const [mapViewState, setMapViewState] = useState({
-    longitude: 50,
-    latitude: 0,
+    longitude: 10,
+    latitude: 20,
     zoom: 1.5,
   });
   const [countriesData, setCountriesData] = useState<Response[]>([]);
@@ -81,8 +81,8 @@ const InteractiveMap = ({ setModal }: MapComponentProps) => {
           object && {
             html: `<h2>${object.name.common}</h2>`,
             style: {
-              backgroundColor: "rgba(252, 250, 250,.8)",
-              fontSize: "1rem",
+              backgroundColor: 'rgba(252, 250, 250,.8)',
+              fontSize: "1em",
               color: "black",
               borderRadius: "10px",
             },
