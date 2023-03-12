@@ -74,3 +74,14 @@ export interface TooltipComponentProps {
   y: number;
   name: string;
 }
+
+export interface ModalInfo {
+  visible: boolean;
+  commonName: string;
+  officialName: string;
+  capital: string;
+  region: string;
+  area: number;
+  flag: string;
+  population: string;
+}

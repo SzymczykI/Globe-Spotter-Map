@@ -6,16 +6,17 @@ import { IconLayer, TextLayer } from "@deck.gl/layers";
 import pin from "../assets/pin.png";
 import { HoverInfo, Response } from "../interfaces";
 import Tooltip from "./Tooltip";
+import useModalState from "../hooks/useModalState";
 
 const InteractiveMap = () => {
   const token = process.env.REACT_APP_MAPBOX_ACCESS_TOKEN;
+  const { populateModalHandler } = useModalState();
 
   const [mapViewState, setMapViewState] = useState({
     longitude: 50,
     latitude: 0,
     zoom: 1.5,
   });
-
   const [countriesData, setCountriesData] = useState<Response[]>([]);
   const [hoverInfo, setHoverInfo] = useState<HoverInfo | null>(null);
 
@@ -25,7 +26,7 @@ const InteractiveMap = () => {
       .catch((err) => console.log(err));
   }, []);
 
-  const hoverHandler = ({object, x, y}:any) => {
+  const hoverHandler = ({ object, x, y }: any) => {
     if (object) {
       setHoverInfo({
         name: object.name.common,
@@ -36,7 +37,9 @@ const InteractiveMap = () => {
     }
   };
 
-  console.log(hoverInfo);
+  const clickHandler = (object: any) => {
+    populateModalHandler(object);
+  };
 
   const countriesLayer = new IconLayer({
     id: "countries",
@@ -52,6 +55,7 @@ const InteractiveMap = () => {
     }),
     sizeMinPixels: 20,
     onHover: hoverHandler,
+    onClick: clickHandler
   });
 
   const capitalsLayer = new TextLayer({
