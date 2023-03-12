@@ -76,6 +76,7 @@ const InteractiveMap = ({ setModal }: MapComponentProps) => {
     getColor: [78, 84, 82],
     getSize: 10,
     getAlignmentBaseline: "center",
+    characterSet: 'auto'
   });
 
   return (
