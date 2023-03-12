@@ -1,5 +1,7 @@
 # Globe Spotter - Interactive Map
 
+> Live demo [_here_](https://gleeful-sawine-18d74c.netlify.app).
+
 ## Table of Contents
 * [General Info](#general-information)
 * [Technologies Used](#technologies-used)
