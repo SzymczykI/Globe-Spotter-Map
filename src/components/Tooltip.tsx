@@ -3,7 +3,7 @@ import { TooltipComponentProps } from "../interfaces";
 const Tooltip = ({ name, x, y }: TooltipComponentProps) => {
   return (
     <div
-      className="absolute bg-white black rounded-md p-5"
+      className="absolute bg-white black rounded-md p-2"
       style={{
         left: x,
         top: y,

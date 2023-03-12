@@ -85,3 +85,12 @@ export interface ModalInfo {
   flag: string;
   population: string;
 }
+
+export interface ModalComponentProps {
+  modal: ModalInfo;
+  setModal: React.Dispatch<React.SetStateAction<ModalInfo>>;
+}
+
+export interface MapComponentProps {
+  setModal: React.Dispatch<React.SetStateAction<ModalInfo>>;
+}

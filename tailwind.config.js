@@ -1,6 +1,7 @@
 /** @type {import('tailwindcss').Config} */
+const withMT = require("@material-tailwind/react/utils/withMT");
 // eslint-disable-next-line no-undef
-module.exports = {
+module.exports = withMT({
   content: ["./src/**/*.{js,jsx,ts,tsx}", "./node_modules/flowbite/**/*.js"],
   theme: {
     extend: {},
@@ -8,5 +9,4 @@ module.exports = {
   plugins: [
     require('flowbite/plugin')
   ],
-}
-
+})

@@ -1,16 +1,14 @@
 import { useEffect, useState } from "react";
 import Map, { NavigationControl } from "react-map-gl";
 import DeckOverlay from "./DeckOverlay";
-import { fetchData } from "../utils/dataFetcher";
 import { IconLayer, TextLayer } from "@deck.gl/layers";
+import { fetchData } from "../utils/dataFetcher";
 import pin from "../assets/pin.png";
-import { HoverInfo, Response } from "../interfaces";
+import { HoverInfo, MapComponentProps, Response } from "../interfaces";
 import Tooltip from "./Tooltip";
-import useModalState from "../hooks/useModalState";
 
-const InteractiveMap = () => {
+const InteractiveMap = ({ setModal }: MapComponentProps) => {
   const token = process.env.REACT_APP_MAPBOX_ACCESS_TOKEN;
-  const { populateModalHandler } = useModalState();
 
   const [mapViewState, setMapViewState] = useState({
     longitude: 50,
@@ -37,8 +35,17 @@ const InteractiveMap = () => {
     }
   };
 
-  const clickHandler = (object: any) => {
-    populateModalHandler(object);
+  const clickHandler = ({ object }: any) => {
+    setModal(() => ({
+      visible: true,
+      officialName: object.name.official,
+      commonName: object.name.common,
+      capital: object.capital ? object.capital[0] : "",
+      region: object.region,
+      area: object.area,
+      flag: object.flags.png,
+      population: object.population,
+    }));
   };
 
   const countriesLayer = new IconLayer({
@@ -55,7 +62,7 @@ const InteractiveMap = () => {
     }),
     sizeMinPixels: 20,
     onHover: hoverHandler,
-    onClick: clickHandler
+    onClick: clickHandler,
   });
 
   const capitalsLayer = new TextLayer({
@@ -81,7 +88,7 @@ const InteractiveMap = () => {
       renderWorldCopies={false}
     >
       <NavigationControl />
-      <DeckOverlay layers={[capitalsLayer, countriesLayer]} />
+      <DeckOverlay layers={[countriesLayer, capitalsLayer]} />
       {hoverInfo && (
         <Tooltip
           x={hoverInfo.latlng[0]}
