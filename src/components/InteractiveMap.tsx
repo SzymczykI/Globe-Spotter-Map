@@ -58,7 +58,7 @@ const InteractiveMap = () => {
       renderWorldCopies={false}
     >
       <NavigationControl />
-      <DeckOverlay />
+      <DeckOverlay layers={[countriesLayer, capitalsLayer]} />
     </Map>
   );
 };
