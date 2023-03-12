@@ -2,6 +2,7 @@ import InteractiveMap from "./components/InteractiveMap";
 import InfoModal from "./components/InfoModal";
 import { ModalInfo } from "./interfaces";
 import { useState } from "react";
+import InfoBox from "./components/InfoBox";
 
 function App() {
   const [modal, setModal] = useState<ModalInfo>({
@@ -17,6 +18,7 @@ function App() {
 
   return (
     <>
+      <InfoBox />
       <InfoModal modal={modal} setModal={setModal} />
       <InteractiveMap setModal={setModal} />
     </>
