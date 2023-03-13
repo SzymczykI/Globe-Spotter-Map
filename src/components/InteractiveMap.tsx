@@ -76,7 +76,6 @@ const InteractiveMap = () => {
       {...mapViewState}
       onMove={(next) => setMapViewState(next.viewState)}
       style={{ width: "100vw", height: "100vh" }}
-      renderWorldCopies={false}
     >
       <NavigationControl />
       <DeckOverlay
