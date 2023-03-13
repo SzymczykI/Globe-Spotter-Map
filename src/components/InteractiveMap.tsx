@@ -1,13 +1,16 @@
-import { useEffect, useState } from "react";
+import { useContext, useEffect, useState } from "react";
+import { ModalContext } from "../contexts/ModalContext";
 import Map, { NavigationControl } from "react-map-gl";
 import DeckOverlay from "./DeckOverlay";
 import { IconLayer, TextLayer } from "@deck.gl/layers";
 import { fetchData } from "../utils/dataFetcher";
 import pin from "../assets/pin.png";
-import { MapComponentProps, Response } from "../interfaces";
+import { Response } from "../interfaces";
 
-const InteractiveMap = ({ setModal }: MapComponentProps) => {
+const InteractiveMap = () => {
   const token = process.env.REACT_APP_MAPBOX_ACCESS_TOKEN;
+
+  const { dispatch } = useContext(ModalContext);
 
   const [mapViewState, setMapViewState] = useState({
     longitude: 10,
@@ -23,7 +26,8 @@ const InteractiveMap = ({ setModal }: MapComponentProps) => {
   }, []);
 
   const clickHandler = ({ object }: any) => {
-    setModal(() => ({
+    dispatch({
+      type: "populateModal",
       visible: true,
       officialName: object.name.official,
       commonName: object.name.common,
@@ -32,7 +36,7 @@ const InteractiveMap = ({ setModal }: MapComponentProps) => {
       area: object.area,
       flag: object.flags.png,
       population: object.population,
-    }));
+    });
   };
 
   const countriesLayer = new IconLayer({
@@ -40,7 +44,7 @@ const InteractiveMap = ({ setModal }: MapComponentProps) => {
     pickable: true,
     data: countriesData,
     getPosition: (d: { latlng: number[] }) => [d.latlng[1], d.latlng[0]],
-    getSize: () => 8,
+    getSize: () => 10,
     getIcon: () => ({
       url: pin,
       width: 128,
@@ -60,7 +64,7 @@ const InteractiveMap = ({ setModal }: MapComponentProps) => {
         : [0, 0],
     getText: (d: { capital: string[] }) => (d.capital ? d.capital[0] : ""),
     getColor: [78, 84, 82],
-    getSize: 10,
+    getSize: 12,
     getAlignmentBaseline: "center",
     characterSet: "auto",
   });
@@ -81,7 +85,7 @@ const InteractiveMap = ({ setModal }: MapComponentProps) => {
           object && {
             html: `<h2>${object.name.common}</h2>`,
             style: {
-              backgroundColor: 'rgba(252, 250, 250,.8)',
+              backgroundColor: "rgba(252, 250, 250,.8)",
               fontSize: "1em",
               color: "black",
               borderRadius: "10px",

@@ -1,14 +1,14 @@
 import { Modal } from "flowbite-react";
-import { ModalComponentProps } from "../interfaces";
+import { useContext } from "react";
+import { ModalContext } from "../contexts/ModalContext";
 
-
-const InfoModal = ({ modal, setModal }: ModalComponentProps) => {
+const InfoModal = () => {
+  const { modal, dispatch } = useContext(ModalContext);
 
   const closeModalHandler = () => {
-    setModal((prev: any) => ({
-      ...prev,
-      visible: false,
-    }));
+    dispatch({
+      type: "closeModal",
+    });
   };
 
   return (

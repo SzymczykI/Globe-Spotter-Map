@@ -1,3 +1,5 @@
+import { ReactNode } from "react";
+
 export interface Response {
   name: Name;
   independent?: boolean;
@@ -64,12 +66,6 @@ export interface Name {
   };
 }
 
-export interface TooltipComponentProps {
-  x: number;
-  y: number;
-  name: string;
-}
-
 export interface ModalInfo {
   visible: boolean;
   commonName: string;
@@ -81,11 +77,6 @@ export interface ModalInfo {
   population: string;
 }
 
-export interface ModalComponentProps {
-  modal: ModalInfo;
-  setModal: React.Dispatch<React.SetStateAction<ModalInfo>>;
-}
-
-export interface MapComponentProps {
-  setModal: React.Dispatch<React.SetStateAction<ModalInfo>>;
+export interface DataProviderProps {
+  children: ReactNode;
 }
